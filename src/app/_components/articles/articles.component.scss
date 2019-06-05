@@ -1,0 +1,62 @@
+.opacity {
+  opacity: 100% !important;
+}
+
+#toast-container > mdb-toast-component.opacity,
+#toast-container > mdb-toast-component.opacity > div {
+  opacity: 100% !important;
+}
+
+tbody tr:hover{
+  background: #33b5e5 !important;
+}
+
+td{
+  text-align:center;
+  font-size: 18px;
+}
+
+td{
+  text-align:center;
+  font-size: 18px;
+}
+
+th{
+  text-align:center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+td {
+  text-align:center;
+}
+
+input {
+  text-align:center;
+  font-size: 18px;
+}
+
+label {
+  font-size: 18px;
+}
+
+p {
+  font-size: 18px;
+}
+
+.text-align-center {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.success-green {
+  background: #00C851;
+}
+.error-red {
+  background: #ff2d41;
+}
+
+.info-text {
+  color: #33b5e5;
+}

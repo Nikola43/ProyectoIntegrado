@@ -1,0 +1,43 @@
+
+<div class="container-fluid">
+  <div class="row row align-items-center justify-content-center">
+    <div class="col-lg-5 mt-4 mb-4">
+      <!-- Material form login -->
+      <mdb-card>
+        <mdb-card-header class="white white-text text-center py-4" style="background-color: #0182e9 !important;">
+          <img src="../../../assets/img/logo1.png" style="height: 100px; width: 400px;">
+        </mdb-card-header>
+        <!--Card content-->
+        <mdb-card-body class="px-lg-5 pt-0">
+          <!-- Form -->
+          <form class="text-center" style="color: #757575;" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="form-group md-form">
+                <label for="username">Usuario</label>
+                <input mdbInput id="username" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+                <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                  <div *ngIf="f.username.errors.required">Username is required</div>
+                </div>
+              </div>
+              <div class="form-group md-form">
+                <label for="password">Contraseña</label>
+                <input mdbInput id="password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                  <div *ngIf="f.password.errors.required">Password is required</div>
+                </div>
+              </div>
+              <div class="form-group md-form">
+                  <button class="btn btn-blue btn-lg btn-rounded" type="submit" data-target="#modalAdd" mdbWavesEffect>Entrar</button>
+                <img *ngIf="loading" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+              </div>
+              <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+          </form>
+          <!-- Form -->
+        </mdb-card-body>
+      </mdb-card>
+      <!-- Material form login -->
+    </div>
+  </div>
+</div>
+
+
+

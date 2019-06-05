@@ -1,0 +1,78 @@
+<body class="">
+
+
+<!--Double navigation-->
+<header *ngIf="currentUser">
+  <!-- Sidebar navigation -->
+  <mdb-side-nav #sidenav class="sn-bg-1 fixed" [fixed]="true">
+
+    <mdb-navbar-brand>
+      <!-- Logo -->
+      <li>
+        <div class="logo-wrapper waves-light">
+          <a href="#"><img src="../assets/img/logo1.png" class="img-fluid flex-center"></a>
+        </div>
+      </li>
+      <!--/. Logo -->
+    </mdb-navbar-brand>
+
+    <links>
+      <!-- Side navigation links -->
+      <ul>
+        <li style="margin-top: 10px">
+          <a routerLinkActive="articles" mdbWavesEffect routerLink="/articles"><i class="fa fa-gifts"></i> Artículos</a>
+        </li>
+        <li style="margin-top: 10px">
+          <a routerLinkActive="invoices" mdbWavesEffect routerLink="/invoices"><i class="fa fa-file-invoice-dollar"></i> Facturas</a>
+        </li>
+      </ul>
+
+      <!--/. Side navigation links -->
+    </links>
+    <div class="sidenav-bg mask-strong"></div>
+  </mdb-side-nav>
+  <!--/. Sidebar navigation -->
+
+  <!-- Navbar -->
+  <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark info-color double-nav"
+              [containerInside]="false">
+
+    <navlinks class="navbar-container">
+      <!-- SideNav slide-out button -->
+      <div class="float-left">
+        <a (click)="sidenav.show()" class="button-collapse"><i class="fas fa-bars"></i></a>
+      </div>
+    </navlinks>
+    <navlinks>
+      <ul class="nav navbar-nav nav-flex-icons ml-auto ie-double-nav">
+        <li class="nav-item">
+          <a class="nav-link waves-light" mdbWavesEffect><i class="far fa-user"></i> <span
+            class="clearfix d-none d-sm-inline-block">Usuario</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-light" mdbWavesEffect (click)="logout()"><i class="fas fa-power-off"></i> <span
+            class="clearfix d-none d-sm-inline-block">Cerrar Sesión</span></a>
+        </li>
+      </ul>
+    </navlinks>
+  </mdb-navbar>
+  <!--/. Navbar -->
+
+</header>
+<!--/.Double navigation-->
+
+<!--Main Layout-->
+<main>
+  <div class="container-fluid">
+    <router-outlet></router-outlet>
+    <!-- credits -->
+    <div class="text-center">
+      <p class="font-weight-bold">
+        Copyright © 2019 Todos los derechos reservados | Desarrollado con <span style="color: #0081ff">❤</span> por <a
+        href="http://www.stelast.com" target="_top">Stela</a>
+      </p>
+    </div>
+  </div>
+</main>
+<!--/Main layout-->
+</body>
