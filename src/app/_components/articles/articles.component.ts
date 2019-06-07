@@ -49,10 +49,6 @@ export class ArticlesComponent implements OnInit {
     }
   }
 
-  showInsertModal() {
-    this.isInsert = true;
-  }
-
   showSuccessInsertModal() {
     this.successInsertModal.show();
 
@@ -99,8 +95,8 @@ export class ArticlesComponent implements OnInit {
 
   }
 
-  showEditIcons(index: number, user) {
-    this.selectedArticle = user;
+  showEditIcons(index: number, article) {
+    this.selectedArticle = article;
     this.rowIndex = index;
     this.visibleEditIcons = true;
     this.isRowEditable = true;
@@ -153,31 +149,14 @@ export class ArticlesComponent implements OnInit {
     this.mdbTableEditor.dataArray[userDataRowIndex] = values;
     this.mdbTableEditor.iterableDataArray[userDataRowIndex] = values;
   }
-
-  onChangeClinicSelect(event) {
-    event.preventDefault();
-  }
-
-  onChangeRolSelect(event) {
-    event.preventDefault();
-  }
-
-  addBlankRow() {
-    this.mdbTableEditor.dataArray.push({
-      id: this.mdbTableEditor.dataArray[this.mdbTableEditor.dataArray.length - 1].id + 1,
-    });
-    this.mdbTableEditor.updatePaginationInfo();
-  }
-
   insertarArticulo(form: any, modalInstance: any) {
     const article: any = {
+      id: this.mdbTableEditor.dataArray[this.mdbTableEditor.dataArray.length - 1].id + 1,
       name: form[0].value,
       category: form[1].value,
       unit_price: Number(form[2].value),
       units_in_stock: Number(form[3].value)
     };
-
-    console.log(article);
 
     this.articleService.insertArticle(article).subscribe(data => {
       if (data.result === 'success') {

@@ -17,6 +17,7 @@ import {PromosComponent} from './_components/promos/promos.component';
 import {MessagesComponent} from './_components/messages/messages.component';
 import {StreamingComponent} from './_components/streaming/streaming.component';
 import {CalculatorComponent} from './_components/calculator/calculator.component';
+import { UserComponent } from './_components/user/user.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import {CalculatorComponent} from './_components/calculator/calculator.component
     MessagesComponent,
     StreamingComponent,
     CalculatorComponent,
+    UserComponent,
   ],
   imports: [
     WavesModule,
