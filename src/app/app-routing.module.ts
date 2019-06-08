@@ -1,13 +1,9 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {AuthGuard} from './_guards';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {LoginComponent} from './_components/login/login.component';
-import {ClinicsComponent} from './_components/clinics/clinics.component';
-import {ClinicComponent} from './_components/clinic/clinic.component';
-import {PromosComponent} from './_components/promos/promos.component';
 import {ArticlesComponent} from './_components/articles/articles.component';
-import {StreamingComponent} from './_components/streaming/streaming.component';
-import {CalculatorComponent} from './_components/calculator/calculator.component';
+import {AuthGuard} from './_guards/auth.guard';
+import {InvoicesComponent} from './_components/invoices/invoices.component';
 
 const routes: Routes = [
   {
@@ -25,34 +21,14 @@ const routes: Routes = [
   },
   {
     path: 'invoices',
-    component: ClinicsComponent
+    component: InvoicesComponent
   },
-  {
-    path: 'clinic',
-    component: ClinicComponent
-  },
-  {
-    path: 'promos',
-    component: PromosComponent
-  },
-  {
-    path: 'messages',
-    component: PromosComponent
-  },
-  {
-    path: 'streaming',
-    component: StreamingComponent
-  },
-  {
-    path: 'calculator',
-    component: CalculatorComponent
-  },
-  // otherwise redirect to home
-  { path: '**', redirectTo: '' }
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

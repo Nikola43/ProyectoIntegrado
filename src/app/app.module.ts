@@ -4,32 +4,26 @@ import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {MDBBootstrapModule, MDBBootstrapModulesPro, MDBSpinningPreloader, ToastModule, WavesModule} from 'ng-uikit-pro-standard';
-import { LoginComponent } from './_components/login/login.component';
+import {LoginComponent} from './_components/login/login.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ErrorInterceptor, JwtInterceptor} from './_helpers';
 import {ArticlesComponent} from './_components/articles/articles.component';
 import {MdbTableEditorModule} from 'mdb-table-editor';
-import { NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {ClinicsComponent} from './_components/clinics/clinics.component';
-import { ClinicComponent } from './_components/clinic/clinic.component';
-import {PromosComponent} from './_components/promos/promos.component';
-import {MessagesComponent} from './_components/messages/messages.component';
-import {StreamingComponent} from './_components/streaming/streaming.component';
-import {CalculatorComponent} from './_components/calculator/calculator.component';
-import { UserComponent } from './_components/user/user.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {UserComponent} from './_components/user/user.component';
+import {JwtInterceptor} from './_helpers/jwt.interceptor';
+import {ErrorInterceptor} from './_helpers/error.interceptor';
+import {InvoicesComponent} from './_components/invoices/invoices.component';
+import {InvoiceDetailsComponent} from './_components/invoice-detail/invoice-details.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ArticlesComponent,
-    ClinicsComponent,
-    ClinicComponent,
-    PromosComponent,
-    MessagesComponent,
-    StreamingComponent,
-    CalculatorComponent,
     UserComponent,
+    InvoicesComponent,
+    InvoiceDetailsComponent
   ],
   imports: [
     WavesModule,
@@ -47,8 +41,8 @@ import { UserComponent } from './_components/user/user.component';
   ],
   providers: [
     MDBSpinningPreloader,
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     // provider used to create fake backend
     {
       provide: HTTP_INTERCEPTORS,
@@ -57,7 +51,7 @@ import { UserComponent } from './_components/user/user.component';
     }
   ],
   bootstrap: [AppComponent],
-  schemas:      [ NO_ERRORS_SCHEMA ]
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppModule {
 }

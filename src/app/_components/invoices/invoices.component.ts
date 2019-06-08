@@ -3,16 +3,16 @@ import {MdbTableEditorDirective} from 'mdb-table-editor';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../_models/user';
 import {ModalDirective} from 'ng-uikit-pro-standard';
-import {ArticleService} from '../../_services/article.service';
 import {Article} from '../../_models/article';
 import {UserService} from '../../_services/user.service';
+import {InvoiceService} from '../../_services/invoice.service';
 
 @Component({
-  selector: 'app-articles',
-  templateUrl: './articles.component.html',
-  styleUrls: ['./articles.component.scss']
+  selector: 'app-users',
+  templateUrl: './invoices.component.html',
+  styleUrls: ['./invoices.component.scss']
 })
-export class ArticlesComponent implements OnInit {
+export class InvoicesComponent implements OnInit {
   currentUser: User;
   @ViewChild('table') mdbTableEditor: MdbTableEditorDirective;
   headElements = [];
@@ -33,19 +33,14 @@ export class ArticlesComponent implements OnInit {
   @ViewChild('successDeleteModal') successDeleteModal: ModalDirective;
   @ViewChild('deleteModal') deleteModal: ModalDirective;
 
-
   constructor(
-    private http: HttpClient, private userService: UserService, private articleService: ArticleService) {
+    private http: HttpClient, private userService: UserService, private invoiceService: InvoiceService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.isMaster = this.currentUser.rol === 'master';
-
-    if (this.isMaster) {
-      this.headElements = ['ID', 'Nombre', 'Categoría', 'Precio por unidad', 'Unidades en stock', 'Editar'];
-      this.articleService.getAll().subscribe(data => {
-        console.log(data);
-        this.mdbTableEditor.dataArray = data;
-      });
-    }
+    this.headElements = ['ID', 'Usuario', 'Fecha de creación', 'Método de envío', 'Método de pago', 'Fecha de entrega estimada', 'Detalles' , 'Editar'];
+    this.invoiceService.getAll().subscribe(data => {
+      this.mdbTableEditor.dataArray = data;
+    });
   }
 
   showSuccessInsertModal() {
@@ -85,7 +80,7 @@ export class ArticlesComponent implements OnInit {
     this.rowIndex = null;
     modalInstance.hide();
 
-    this.articleService.deleteArticle(this.selectedArticle.id).subscribe(data => {
+    this.invoiceService.deleteInvoice(this.selectedArticle.id).subscribe(data => {
       if (data.result === 'success') {
         this.showSuccessDeleteModal();
       } else {
@@ -136,7 +131,7 @@ export class ArticlesComponent implements OnInit {
       || this.selectedArticle.units_in_stock !== values.units_in_stock) {
 
 
-      this.articleService.updateArticle(values).subscribe(data => {
+      this.invoiceService.updateInvoice(values).subscribe(data => {
         console.log(data);
         if (data.result === 'success') {
           this.showSuccessUpdateModal();
@@ -158,7 +153,7 @@ export class ArticlesComponent implements OnInit {
       units_in_stock: Number(form[3].value)
     };
 
-    this.articleService.insertArticle(article).subscribe(data => {
+    this.invoiceService.insertInvoice(article).subscribe(data => {
       if (data.result === 'success') {
         this.showSuccessInsertModal();
       }
@@ -173,6 +168,13 @@ export class ArticlesComponent implements OnInit {
     form[1].value = '';
     form[2].value = '';
     form[3].value = '';
+  }
+
+  showDetails(item, modal) {
+  }
+
+  insertarFactura(item, modal){
+
   }
 
   ngOnInit() {

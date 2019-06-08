@@ -1,0 +1,232 @@
+<div mdbModal #modalAdd="mdbModal" class="modal fade addNewInputs" id="modalAdd" tabindex="-1" role="dialog"
+     aria-labelledby="modalAdd"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold info-text ml-5">Añadir factura</h4>
+        <button type="button" class="close text-primary" (click)="modalAdd.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <form #addForm>
+          <div class="md-form mb-5">
+            <input type="text" id="name" class="form-control validate" mdbInput required="required">
+            <label data-error="wrong" data-success="right" for="name">Usuario</label>
+          </div>
+
+          <div class="md-form mb-5">
+            <input type="text" id="category" class="form-control validate" mdbInput required="required">
+            <label data-error="wrong" data-success="right" for="category">Fecha</label>
+          </div>
+
+          <div class="md-form mb-5">
+            <input type="number" id="unit_price" class="form-control validate" mdbInput>
+            <label data-error="wrong" data-success="right" for="unit_price">Método de pago</label>
+          </div>
+
+          <div class="md-form mb-5">
+            <input type="text" id="inits_in_stock" class="form-control validate" mdbInput>
+            <label data-error="wrong" data-success="right" for="inits_in_stock">Método de envío</label>
+          </div>
+
+          <div class="md-form mb-5">
+            <input type="text" id="estimated_delivery_date" class="form-control validate" mdbInput>
+            <label data-error="wrong" data-success="right" for="estimated_delivery_date">Fecha de entrega
+              estimada</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-center buttonAddFormWrapper">
+        <button class="btn btn-info btn-block buttonAdd" data-dismiss="modal"
+                (click)="insertarFactura(addForm, modalAdd)">Insertar factura
+          <i class="fas fa-paper-plane-o ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #successInsertModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
+     aria-labelledby="insertModal" aria-hidden="true">
+  <div class="modal-dialog modal-frame modal-top" role="document">
+    <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
+      <div class="modal-header">
+        <h4 class="modal-title w-100">Factura insertado correctamente</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #successUpdateModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
+     aria-labelledby="updateModal" aria-hidden="true">
+  <div class="modal-dialog modal-frame modal-top" role="document">
+    <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
+      <div class="modal-header">
+        <h4 class="modal-title w-100">Factura actualizado correctamente</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #successDeleteModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModal" aria-hidden="true">
+  <div class="modal-dialog modal-frame modal-top" role="document">
+    <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
+      <div class="modal-header">
+        <h4 class="modal-title w-100">Factura eliminado correctamente</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #bottom="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
+     aria-labelledby="updateModal" aria-hidden="true">
+  <div class="modal-dialog modal-frame modal-fluid modal-bottom" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #deleteModal="mdbModal" class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold ml-5 text-danger">Eliminar</h4>
+        <button type="button" class="close text-danger" (click)="deleteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <p *ngIf="selectedArticle" class="text-center h4">¿Estás seguro que deseas eliminar al
+          artículo {{selectedArticle.name}}?</p>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center deleteButtonsWrapper">
+        <a (click)="deleteModal.hide()" mdbWavesEffect type="button" class="btn-floating red mr-5"><i
+          class="fa fa-times" aria-hidden="true"></i></a>
+        <a (click)="modalRemove(deleteModal)" mdbWavesEffect type="button" class="btn-floating green"><i
+          class="fa fa-check" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-md-12 mx-auto">
+    <div class="row w-100 d-flex align-items-center mx-auto">
+      <div class="col-md-4 d-flex align-items-center">
+        <span class="font-weight-bolder">Mostrar</span>
+
+        <select class="browser-default custom-select mx-2" [(ngModel)]="visibleItems"
+                (ngModelChange)="visibleItems = +$event" style="width: unset;">
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+
+        <span class="font-weight-bolder">Facturas</span>
+      </div>
+      <div class="col-md-4 my-3 d-flex">
+        <a (click)="modalAdd.show()" mdbWavesEffect type="button"
+           class="btn-floating blue-gradient text-align-center"><i
+          class="fa fa-plus" aria-hidden="true"></i>Añadir</a>
+      </div>
+
+      <div class="col-md-4 my-3 text-right d-flex align-items-center text-align-center">
+        <input placeholder="Buscar" type="search" class="form-control form-control-sm ml-2" [(ngModel)]="searchText">
+      </div>
+    </div>
+    <table mdbTable mdbTableEditor class="table table-striped z-depth-1" [hover]="true" [itemsPerPage]="visibleItems"
+           #table="mdbEditor"
+           (rowHighlight)="highlightedRow = $event">
+      <thead class="blue-gradient white-text">
+      <tr>
+        <th *ngFor="let head of headElements;" scope="col">{{head}}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="isMaster">
+      <tr *ngFor="let item of table.performSearch(this.searchText); let i = index" #tableRow>
+        <td>
+          <ng-container>
+            {{item.id}}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container>
+            {{item.user_id}}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container>
+            {{item.creation_date | date:"dd/MM/yyyy '-' HH:ss"}}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="i !== rowIndex">
+            {{item.shipping_method}}
+          </ng-container>
+          <ng-container *ngIf="i == rowIndex">
+            <input [size]="1" type="text" class="form-control" [value]="item.shipping_method">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="i !== rowIndex">
+            {{item.payment_method}}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="i !== rowIndex">
+            {{item.estimated_delivery_date}}
+          </ng-container>
+          <ng-container *ngIf="i == rowIndex">
+            <input [size]="1" type="text" class="form-control" [value]="item.estimated_delivery_date">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container>
+            <a (click)="bottom.show()" mdbWavesEffect type="button"
+               class="btn-floating blue-gradient"><i class="fa fa-list" aria-hidden="true"></i></a>
+          </ng-container>
+        </td>
+        <td *ngIf="isTableEditable">
+          <div class="d-flex flex-column flex-center">
+            <a *ngIf="!isRowEditable" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
+               class="btn-floating blue-gradient"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
+            <div *ngIf="visibleEditIcons && i == rowIndex" class="d-flex flex-center">
+              <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button" class="btn-floating success-green mr-2"><i
+                class="fa fa-check" aria-hidden="true"></i></a>
+              <a (click)="showDeleteModal()" mdbWavesEffect type="button" class="btn-floating error-red mr-2"><i
+                class="fa fa-trash-alt" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td colspan="8">
+          <div class="d-flex flex-center">
+              <span>Mostrando desde {{table.paginationInfo.firstItem}} hasta {{table.paginationInfo.lastItem}}
+                de {{table.paginationInfo.allItems}} facturas</span>
+            <div class="flex-1"></div>
+            <mdb-icon fas icon="angle-left" size="lg" (click)="table.prevPage()" class="p-2"
+                      [ngClass]="{'disabled text-muted': table.disablePrevious()}" mdbWavesEffect></mdb-icon>
+            <mdb-icon fas icon="angle-right" size="lg" (click)="table.nextPage()" class="p-2"
+                      [ngClass]="{'disabled text-muted': table.disableNext()}" mdbWavesEffect></mdb-icon>
+          </div>
+        </td>
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
