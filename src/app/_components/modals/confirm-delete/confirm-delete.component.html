@@ -1,0 +1,25 @@
+<div mdbModal #frame="mdbModal" class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold ml-5 text-danger">Eliminar</h4>
+        <button type="button" class="close text-danger" (click)="showModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <p *ngIf="deletedObject" class="text-center h4">¿Estás seguro que deseas eliminar al
+          artículo {{deletedObject.name}}?</p>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center deleteButtonsWrapper">
+        <a (click)="hideModal()" mdbWavesEffect type="button" class="btn-floating red mr-5"><i
+          class="fa fa-times" aria-hidden="true"></i></a>
+        <a (click)="delete()" mdbWavesEffect type="button" class="btn-floating green"><i
+          class="fa fa-check" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
