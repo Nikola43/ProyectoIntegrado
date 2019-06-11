@@ -44,64 +44,33 @@
       </div>
     </div>
 
-    <div mdbModal #successInsertModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-         aria-labelledby="insertModal" aria-hidden="true">
-      <div class="modal-dialog modal-frame modal-top" role="document">
-        <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
-          <div class="modal-header">
-            <h4 class="modal-title w-100">Articulo insertado correctamente</h4>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- SUCCESS DELETE MODAL -->
+    <app-success-bottom-modal *ngIf="isSuccessDelete"
+                              [message]="message"
+                              (emitter)="hideSuccessDeleteModal()"
+                              [isVisible]="isSuccessDelete">
+    </app-success-bottom-modal>
 
-    <div mdbModal #successUpdateModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-         aria-labelledby="updateModal" aria-hidden="true">
-      <div class="modal-dialog modal-frame modal-top" role="document">
-        <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
-          <div class="modal-header">
-            <h4 class="modal-title w-100">Articulo actualizado correctamente</h4>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- SUCCESS UPDATE MODAL -->
+    <app-success-bottom-modal *ngIf="isSuccessUpdate"
+                              [message]="message"
+                              (emitter)="hideSuccessUpdateModal()"
+                              [isVisible]="isSuccessUpdate">
+    </app-success-bottom-modal>
 
-    <div mdbModal #successDeleteModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-         aria-labelledby="deleteModal" aria-hidden="true">
-      <div class="modal-dialog modal-frame modal-top" role="document">
-        <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
-          <div class="modal-header">
-            <h4 class="modal-title w-100">Articulo eliminado correctamente</h4>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- SUCCESS INSERT MODAL -->
+    <app-success-bottom-modal *ngIf="isSuccessInsert"
+                              [message]="message"
+                              (emitter)="hideSuccessInsertModal()"
+                              [isVisible]="isSuccessInsert">
+    </app-success-bottom-modal>
 
-    <div mdbModal #deleteModal="mdbModal" class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
-         aria-labelledby="deleteModal"
-         aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header text-center">
-            <h4 class="modal-title w-100 font-weight-bold ml-5 text-danger">Eliminar</h4>
-            <button type="button" class="close text-danger" (click)="deleteModal.hide()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body mx-3">
-            <p *ngIf="selectedArticle" class="text-center h4">¿Estás seguro que deseas eliminar al
-              artículo {{selectedArticle.name}}?</p>
-
-          </div>
-          <div class="modal-footer d-flex justify-content-center deleteButtonsWrapper">
-            <a (click)="deleteModal.hide()" mdbWavesEffect type="button" class="btn-floating red mr-5"><i
-              class="fa fa-times" aria-hidden="true"></i></a>
-            <a (click)="modalRemove(deleteModal)" mdbWavesEffect type="button" class="btn-floating green"><i
-              class="fa fa-check" aria-hidden="true"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-confirm-delete *ngIf="confirmDeleteModalIsVisible"
+                        [deletedObject]="selectedArticle"
+                        [message]="message"
+                        (emitter)="modalRemove()"
+                        [isVisible]="confirmDeleteModalIsVisible">
+    </app-confirm-delete>
   </div>
 
   <div class="row">
@@ -138,7 +107,7 @@
               scope="col">{{head}}</th>
         </tr>
         </thead>
-        <tbody *ngIf="isMaster">
+        <tbody>
         <tr *ngFor="let item of table.performSearch(this.searchText); let i = index" #tableRow>
           <td>
             <ng-container *ngIf="i !== rowIndex">
@@ -187,7 +156,8 @@
               <div *ngIf="visibleEditIcons && i == rowIndex" class="d-flex flex-center">
                 <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button" class="btn-floating success-green mr-2"><i
                   class="fa fa-check" aria-hidden="true"></i></a>
-                <a (click)="showDeleteModal()" mdbWavesEffect type="button" class="btn-floating error-red mr-2"><i
+                <a (click)="showConfirmDeleteModal()" mdbWavesEffect type="button"
+                   class="btn-floating error-red mr-2"><i
                   class="fa fa-trash-alt" aria-hidden="true"></i></a>
               </div>
             </div>

@@ -10,6 +10,7 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
   private apiUrl = 'http://localhost:8080';
+  // private apiUrl = 'http://51.77.223.220:8080';
 
 
   constructor(private http: HttpClient) {

@@ -48,78 +48,6 @@
   </div>
 </div>
 
-<div mdbModal #successInsertModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-     aria-labelledby="insertModal" aria-hidden="true">
-  <div class="modal-dialog modal-frame modal-top" role="document">
-    <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
-      <div class="modal-header">
-        <h4 class="modal-title w-100">Factura insertado correctamente</h4>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div mdbModal #successUpdateModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-     aria-labelledby="updateModal" aria-hidden="true">
-  <div class="modal-dialog modal-frame modal-top" role="document">
-    <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
-      <div class="modal-header">
-        <h4 class="modal-title w-100">Factura actualizado correctamente</h4>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div mdbModal #successDeleteModal="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-     aria-labelledby="deleteModal" aria-hidden="true">
-  <div class="modal-dialog modal-frame modal-top" role="document">
-    <div class="modal-content" style="background: #00C851; text-align: center; color: white;">
-      <div class="modal-header">
-        <h4 class="modal-title w-100">Factura eliminado correctamente</h4>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div mdbModal #bottom="mdbModal" class="modal fade top" tabindex="-1" role="dialog"
-     aria-labelledby="updateModal" aria-hidden="true">
-  <div class="modal-dialog modal-frame modal-fluid modal-bottom" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<div mdbModal #deleteModal="mdbModal" class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
-     aria-labelledby="deleteModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold ml-5 text-danger">Eliminar</h4>
-        <button type="button" class="close text-danger" (click)="deleteModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <p *ngIf="selectedArticle" class="text-center h4">¿Estás seguro que deseas eliminar al
-          artículo {{selectedArticle.name}}?</p>
-
-      </div>
-      <div class="modal-footer d-flex justify-content-center deleteButtonsWrapper">
-        <a (click)="deleteModal.hide()" mdbWavesEffect type="button" class="btn-floating red mr-5"><i
-          class="fa fa-times" aria-hidden="true"></i></a>
-        <a (click)="modalRemove(deleteModal)" mdbWavesEffect type="button" class="btn-floating green"><i
-          class="fa fa-check" aria-hidden="true"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 <div class="row">
   <div class="col-md-12 mx-auto">
     <div class="row w-100 d-flex align-items-center mx-auto">
@@ -154,20 +82,29 @@
         <th *ngFor="let head of headElements;" scope="col">{{head}}</th>
       </tr>
       </thead>
-      <tbody *ngIf="isMaster">
+      <tbody>
       <tr *ngFor="let item of table.performSearch(this.searchText); let i = index" #tableRow>
         <td>
-          <ng-container>
+          <ng-container *ngIf="i !== rowIndex">
+            {{item.id}}
+          </ng-container>
+          <ng-container *ngIf="i == rowIndex">
             {{item.id}}
           </ng-container>
         </td>
         <td>
-          <ng-container>
+          <ng-container *ngIf="i !== rowIndex">
+            {{item.user_id}}
+          </ng-container>
+          <ng-container *ngIf="i == rowIndex">
             {{item.user_id}}
           </ng-container>
         </td>
         <td>
-          <ng-container>
+          <ng-container *ngIf="i !== rowIndex">
+            {{item.creation_date | date:"dd/MM/yyyy '-' HH:ss"}}
+          </ng-container>
+          <ng-container *ngIf="i == rowIndex">
             {{item.creation_date | date:"dd/MM/yyyy '-' HH:ss"}}
           </ng-container>
         </td>
@@ -183,10 +120,13 @@
           <ng-container *ngIf="i !== rowIndex">
             {{item.payment_method}}
           </ng-container>
+          <ng-container *ngIf="i == rowIndex">
+            {{item.payment_method}}
+          </ng-container>
         </td>
         <td>
           <ng-container *ngIf="i !== rowIndex">
-            {{item.estimated_delivery_date}}
+            {{item.estimated_delivery_date | date:"dd/MM/yyyy '-' HH:ss"}}
           </ng-container>
           <ng-container *ngIf="i == rowIndex">
             <input [size]="1" type="text" class="form-control" [value]="item.estimated_delivery_date">
@@ -194,7 +134,9 @@
         </td>
         <td>
           <ng-container>
-            <a (click)="bottom.show()" mdbWavesEffect type="button"
+            <a (click)="show()" mdbWavesEffect type="button"
+               class="btn-floating blue-gradient"><i class="fa fa-list" aria-hidden="true"></i></a>
+            <a (click)="hide()" mdbWavesEffect type="button"
                class="btn-floating blue-gradient"><i class="fa fa-list" aria-hidden="true"></i></a>
           </ng-container>
         </td>

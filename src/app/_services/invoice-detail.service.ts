@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class InvoiceDetailService {
   private apiUrl = 'http://localhost:8080';
+  // private apiUrl = 'http://51.77.223.220:8080';
 
   constructor(private http: HttpClient) {
   }

@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MdbTableEditorDirective} from 'mdb-table-editor';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../_models/user';
-import {ModalDirective} from 'ng-uikit-pro-standard';
 import {ArticleService} from '../../_services/article.service';
 import {Article} from '../../_models/article';
 import {UserService} from '../../_services/user.service';
@@ -21,18 +20,17 @@ export class ArticlesComponent implements OnInit {
   highlightedRow: any = null;
   isMaster: boolean;
   selectedArticle: Article;
-  modalTimeout = 1000;
   rolOptions = ['master', 'user'];
+  message: string;
+  confirmDeleteModalIsVisible: boolean;
+  isSuccessDelete: boolean;
+  isSuccessUpdate: boolean;
+  isSuccessInsert: boolean;
 
   rowIndex: any = null;
   isTableEditable = true;
   visibleEditIcons = false;
   isRowEditable = false;
-  @ViewChild('successInsertModal') successInsertModal: ModalDirective;
-  @ViewChild('successUpdateModal') successUpdateModal: ModalDirective;
-  @ViewChild('successDeleteModal') successDeleteModal: ModalDirective;
-  @ViewChild('deleteModal') deleteModal: ModalDirective;
-
 
   constructor(
     private http: HttpClient, private userService: UserService, private articleService: ArticleService) {
@@ -48,50 +46,53 @@ export class ArticlesComponent implements OnInit {
     }
   }
 
-  showSuccessInsertModal() {
-    this.successInsertModal.show();
+  showSuccessDeleteModal() {
+    this.isSuccessDelete = true;
+  }
 
-    setTimeout(() => {
-      this.successInsertModal.hide();
-    }, this.modalTimeout);
+  hideSuccessDeleteModal() {
+    this.isSuccessDelete = false;
   }
 
   showSuccessUpdateModal() {
-    this.successUpdateModal.show();
-
-    setTimeout(() => {
-      this.successUpdateModal.hide();
-    }, this.modalTimeout);
+    this.isSuccessUpdate = true;
   }
 
-  showDeleteModal() {
-    this.deleteModal.show();
+  hideSuccessUpdateModal() {
+    this.isSuccessUpdate = false;
   }
 
-  showSuccessDeleteModal() {
-    this.successDeleteModal.show();
-
-    setTimeout(() => {
-      this.successDeleteModal.hide();
-    }, this.modalTimeout);
+  showSuccessInsertModal() {
+    this.isSuccessInsert = true;
   }
 
-  modalRemove(modalInstance: any) {
-    const rowIndex = this.mdbTableEditor.dataArray.findIndex((el: any) => el === this.highlightedRow);
-    this.mdbTableEditor.dataArray.splice(rowIndex, 1);
-    this.mdbTableEditor.iterableDataArray.splice(rowIndex, 1);
-    this.mdbTableEditor.updatePaginationInfo();
-    this.visibleEditIcons = false;
-    this.rowIndex = null;
-    modalInstance.hide();
+  hideSuccessInsertModal() {
+    this.isSuccessInsert = false;
+  }
 
+  hideConfirmDeleteModal() {
+    this.isRowEditable = false;
+    this.confirmDeleteModalIsVisible = false;
+  }
+
+  showConfirmDeleteModal() {
+    this.confirmDeleteModalIsVisible = true;
+  }
+
+  modalRemove() {
     this.articleService.deleteArticle(this.selectedArticle.id).subscribe(data => {
       if (data.result === 'success') {
+        const rowIndex = this.mdbTableEditor.dataArray.findIndex((el: any) => el === this.highlightedRow);
+        this.mdbTableEditor.dataArray.splice(rowIndex, 1);
+        this.mdbTableEditor.iterableDataArray.splice(rowIndex, 1);
+        this.rowIndex = null;
+        this.mdbTableEditor.updatePaginationInfo();
+        this.message = 'Artículo eliminado correctamente';
         this.showSuccessDeleteModal();
       } else {
       }
     });
-
+    this.hideConfirmDeleteModal();
   }
 
   showEditIcons(index: number, article) {
@@ -139,6 +140,7 @@ export class ArticlesComponent implements OnInit {
       this.articleService.updateArticle(values).subscribe(data => {
         console.log(data);
         if (data.result === 'success') {
+          this.message = 'Artículo actualizado correctamente';
           this.showSuccessUpdateModal();
         } else {
 
@@ -160,6 +162,7 @@ export class ArticlesComponent implements OnInit {
 
     this.articleService.insertArticle(article).subscribe(data => {
       if (data.result === 'success') {
+        this.message = 'Artículo insertado correctamente';
         this.showSuccessInsertModal();
       }
     });

@@ -23,6 +23,8 @@ export class InvoicesComponent implements OnInit {
   selectedArticle: Article;
   modalTimeout = 1000;
   rolOptions = ['master', 'user'];
+  insert = false;
+  message: string;
 
   rowIndex: any = null;
   isTableEditable = true;
@@ -37,26 +39,18 @@ export class InvoicesComponent implements OnInit {
     private http: HttpClient, private userService: UserService, private invoiceService: InvoiceService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.isMaster = this.currentUser.rol === 'master';
-    this.headElements = ['ID', 'Usuario', 'Fecha de creación', 'Método de envío', 'Método de pago', 'Fecha de entrega estimada', 'Detalles' , 'Editar'];
+    this.headElements = ['ID', 'Usuario', 'Fecha de creación', 'Método de envío', 'Método de pago', 'Fecha de entrega estimada', 'Detalles', 'Editar'];
     this.invoiceService.getAll().subscribe(data => {
       this.mdbTableEditor.dataArray = data;
     });
   }
 
-  showSuccessInsertModal() {
-    this.successInsertModal.show();
-
-    setTimeout(() => {
-      this.successInsertModal.hide();
-    }, this.modalTimeout);
+  show() {
+    this.insert = true;
   }
 
-  showSuccessUpdateModal() {
-    this.successUpdateModal.show();
-
-    setTimeout(() => {
-      this.successUpdateModal.hide();
-    }, this.modalTimeout);
+  hide() {
+    this.insert = false;
   }
 
   showDeleteModal() {
@@ -106,10 +100,11 @@ export class InvoicesComponent implements OnInit {
 
     const values = {
       id: (row.childNodes[0].textContent.trim()),
-      name: '',
-      category: '',
-      unit_price: 0,
-      units_in_stock: 0,
+      user_id: '',
+      creation_date: '',
+      shipping_method: '',
+      payment_method: '',
+      estimated_delivery_date: ''
     };
 
 
@@ -122,23 +117,19 @@ export class InvoicesComponent implements OnInit {
     });
 
     values.id = Number(values.id);
-    values.unit_price = Number(values.unit_price);
-    values.units_in_stock = Number(values.units_in_stock);
 
-    if (this.selectedArticle.name !== values.name
-      || this.selectedArticle.category !== values.category
-      || this.selectedArticle.unit_price !== values.unit_price
-      || this.selectedArticle.units_in_stock !== values.units_in_stock) {
+    console.log(values);
 
 
+    if (true) {
+      /*
       this.invoiceService.updateInvoice(values).subscribe(data => {
         console.log(data);
         if (data.result === 'success') {
-          this.showSuccessUpdateModal();
-        } else {
-
+          this.show();
         }
       });
+      */
     }
     this.mdbTableEditor.dataArray[userDataRowIndex] = values;
     this.mdbTableEditor.iterableDataArray[userDataRowIndex] = values;
@@ -155,7 +146,8 @@ export class InvoicesComponent implements OnInit {
 
     this.invoiceService.insertInvoice(article).subscribe(data => {
       if (data.result === 'success') {
-        this.showSuccessInsertModal();
+        this.message = 'Usuario insertado correctamente';
+        this.show();
       }
     });
 
@@ -173,7 +165,7 @@ export class InvoicesComponent implements OnInit {
   showDetails(item, modal) {
   }
 
-  insertarFactura(item, modal){
+  insertarFactura(item, modal) {
 
   }
 
