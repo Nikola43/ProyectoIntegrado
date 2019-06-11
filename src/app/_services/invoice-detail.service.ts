@@ -23,14 +23,14 @@ export class InvoiceDetailService {
 
 
   insertInvoiceDetails(invoinceDetail: any) {
-    return this.http.post<any>(this.apiUrl + '/invoice_detail', JSON.stringify(invoinceDetail));
+    return this.http.post<any>(this.apiUrl + '/invoice_details', JSON.stringify(invoinceDetail));
   }
 
   updateInvoiceDetail(invoinceDetail: any) {
-    return this.http.put<any>(this.apiUrl + '/invoice_detail/' + invoinceDetail.id, JSON.stringify(invoinceDetail));
+    return this.http.put<any>(this.apiUrl + '/invoice_details/' + invoinceDetail.invoice_id + '/' + invoinceDetail.article_id, JSON.stringify(invoinceDetail));
   }
 
-  deleteInvoiceDetail(invoinceDetail: number) {
-    return this.http.delete<any>(this.apiUrl + '/invoice_detail/' + invoinceDetail);
+  deleteInvoiceDetail(invoinceDetail: any) {
+    return this.http.delete<any>(this.apiUrl + '/invoice_details/' + invoinceDetail.invoice_id + '/' + invoinceDetail.article_id);
   }
 }

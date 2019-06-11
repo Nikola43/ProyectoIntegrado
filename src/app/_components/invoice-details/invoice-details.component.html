@@ -114,54 +114,28 @@
         <tr *ngFor="let item of table.performSearch(this.searchText); let i = index" #tableRow>
           <td>
             <ng-container *ngIf="i !== rowIndex">
-              {{item.id}}
+              {{item.invoice_id}}
             </ng-container>
             <ng-container *ngIf="i == rowIndex">
-              <input disabled [size]="1" type="number" class="form-control" [value]="item.id">
+              <input disabled [size]="1" type="number" class="form-control" [value]="item.invoice_id">
             </ng-container>
           </td>
           <td>
             <ng-container *ngIf="i !== rowIndex">
-              {{item.user_id}}
+              {{item.article_name}}
             </ng-container>
             <ng-container *ngIf="i == rowIndex">
-              <input disabled [size]="1" type="number" class="form-control" [value]="item.user_id">
+              <input hidden disabled [size]="1" type="text" class="form-control" [value]="item.article_id">
+              <input disabled [size]="1" type="text" class="form-control" [value]="item.article_name">
             </ng-container>
           </td>
           <td>
             <ng-container *ngIf="i !== rowIndex">
-              {{item.creation_date}}
+              {{item.quantity}}
             </ng-container>
             <ng-container *ngIf="i == rowIndex">
-              <input disabled [size]="item.creation_date.length" type="text" class="form-control"
-                     [value]="item.creation_date">
-            </ng-container>
-          </td>
-          <td>
-            <ng-container *ngIf="i !== rowIndex">
-              {{item.shipping_method}}
-            </ng-container>
-            <ng-container *ngIf="i == rowIndex">
-              <input [size]="item.shipping_method.length" type="text" class="form-control"
-                     [value]="item.shipping_method">
-            </ng-container>
-          </td>
-          <td>
-            <ng-container *ngIf="i !== rowIndex">
-              {{item.payment_method}}
-            </ng-container>
-            <ng-container *ngIf="i == rowIndex">
-              <input disabled [size]="item.payment_method.length" type="text" class="form-control"
-                     [value]="item.payment_method">
-            </ng-container>
-          </td>
-          <td>
-            <ng-container *ngIf="i !== rowIndex">
-              {{item.estimated_delivery_date}}
-            </ng-container>
-            <ng-container *ngIf="i == rowIndex">
-              <mdb-date-picker name="estimated_delivery_date" [placeholder]="'Selected date'"
-                               [(ngModel)]="selectedDate"></mdb-date-picker>
+              <input [size]="1" type="number" class="form-control"
+                     [value]="item.quantity">
             </ng-container>
           </td>
           <td *ngIf="isTableEditable">
@@ -171,9 +145,6 @@
               <div *ngIf="visibleEditIcons && i == rowIndex" class="d-flex flex-center">
                 <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button" class="btn-floating success-green mr-2"><i
                   class="fa fa-check" aria-hidden="true"></i></a>
-                <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button"
-                   class="btn-floating secondary-color  mr-2"><i
-                  class="fa fa-list" aria-hidden="true"></i></a>
                 <a (click)="showConfirmDeleteModal()" mdbWavesEffect type="button"
                    class="btn-floating error-red mr-2"><i
                   class="fa fa-trash-alt" aria-hidden="true"></i></a>

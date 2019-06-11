@@ -6,6 +6,7 @@ import {UserService} from '../../_services/user.service';
 import {InvoiceDetailService} from '../../_services/invoice-detail.service';
 import {InvoiceDetail} from '../../_models/invoice-detail';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ArticleService} from '../../_services/article.service';
 
 
 @Component({
@@ -21,8 +22,9 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   searchText = '';
   highlightedRow: any = null;
   isMaster: boolean;
-  selectedInvoiceDetail: InvoiceDetail;
+  selectedInvoiceDetail: any;
   rolOptions = ['master', 'user'];
+  articleList = [];
   selectedDate: string;
   message: string;
   confirmDeleteModalIsVisible: boolean;
@@ -35,19 +37,19 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   visibleEditIcons = false;
   isRowEditable = false;
   private sub: any;
+  private selectedArticle;
 
 
   constructor(
     private http: HttpClient,
     private userService: UserService,
     private invoiceDetailService: InvoiceDetailService,
+    private articleService: ArticleService,
     private route: ActivatedRoute,
     private router: Router) {
-
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.isMaster = this.currentUser.rol === 'master';
-    this.headElements = ['ID', 'Usuario', 'Fecha de creación',
-      'Método de envío', 'Método de pago', 'Fecha estimada de entrega', 'Editar'];
+    this.headElements = ['ID', 'Artículo', 'Cantidad', 'Editar'];
   }
 
   ngOnDestroy() {
@@ -55,16 +57,20 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    let id = 0;
     this.sub = this.route
       .queryParams
       .subscribe(params => {
         // Defaults to 0 if no query param provided.
-        const id = +params['id'] || 0;
-        console.log(id);
+        id = +params['id'] || 0;
       });
 
-    this.invoiceDetailService.getAllFromInvoiceID(1).subscribe(data => {
+    this.invoiceDetailService.getAllFromInvoiceID(id).subscribe(data => {
       this.mdbTableEditor.dataArray = data;
+    });
+
+    this.articleService.getAll().subscribe(data => {
+      this.articleList = data;
     });
   }
 
@@ -106,7 +112,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
   modalRemove() {
-    this.invoiceDetailService.deleteInvoiceDetail(this.selectedInvoiceDetail.id).subscribe(data => {
+    this.invoiceDetailService.deleteInvoiceDetail(this.selectedInvoiceDetail).subscribe(data => {
       if (data.result === 'success') {
         const rowIndex = this.mdbTableEditor.dataArray.findIndex((el: any) => el === this.highlightedRow);
         this.mdbTableEditor.dataArray.splice(rowIndex, 1);
@@ -136,36 +142,38 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
 
     const userDataRowIndex = this.mdbTableEditor.dataArray.findIndex((el: any) => el === this.highlightedRow);
 
+    console.log('selected: ');
+    console.log(this.selectedInvoiceDetail);
+
     const values: any = {
-      id: (row.childNodes[0].textContent.trim()),
-      user_id: 0,
-      creation_date: '',
-      shipping_method: '',
-      payment_method: '',
-      estimated_delivery_date: this.selectedDate
+      invoice_id: this.selectedInvoiceDetail.invoice_id,
+      article_id: this.selectedInvoiceDetail.article_id,
+      quantity: this.selectedInvoiceDetail.quantity,
     };
+
+    console.log('values: ');
+    console.log(values);
 
     row.childNodes.forEach((el: any, i: number) => {
       if (i > 0 && i <= row.childNodes.length - 2) {
         if (el.firstElementChild) {
-          el.firstElementChild.value.estimated_delivery_date = this.selectedDate;
           values[Object.keys(values)[i]] = el.firstElementChild.value;
         }
       }
     });
 
-    values.id = Number(values.id);
-    values.id = Number(values.id);
+
+    values.article_id = Number(values.article_id);
+    values.invoice_id = Number(values.invoice_id);
+    values.quantity = Number(values.quantity);
 
 
-    console.log(values);
-
-
-    if (this.selectedInvoiceDetail.id !== values.id
-      || this.selectedInvoiceDetail.id !== values.id) {
+    if (this.selectedInvoiceDetail.quantity !== values.quantity) {
       this.invoiceDetailService.updateInvoiceDetail(values).subscribe(data => {
-        console.log(data);
         if (data.result === 'success') {
+          this.selectedInvoiceDetail.quantity = values.quantity;
+          this.mdbTableEditor.dataArray[userDataRowIndex] = this.selectedInvoiceDetail;
+          this.mdbTableEditor.iterableDataArray[userDataRowIndex] = this.selectedInvoiceDetail;
           this.message = 'Artículo actualizado correctamente';
           this.showSuccessUpdateModal();
         } else {
@@ -173,8 +181,13 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
         }
       });
     }
-    this.mdbTableEditor.dataArray[userDataRowIndex] = values;
-    this.mdbTableEditor.iterableDataArray[userDataRowIndex] = values;
+
+
+  }
+
+  onChangeRolSelect(event) {
+    event.preventDefault();
+    this.selectedArticle = event.target.value;
   }
 
   insertInvoiceDetail(form: any, modalInstance: any) {
