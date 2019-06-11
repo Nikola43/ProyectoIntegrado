@@ -1,18 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MdbTableEditorDirective} from 'mdb-table-editor';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../_models/user';
 import {UserService} from '../../_services/user.service';
 import {InvoiceDetailService} from '../../_services/invoice-detail.service';
 import {InvoiceDetail} from '../../_models/invoice-detail';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
   selector: 'app-invoice-details',
-  templateUrl: './invoice_details.component.html',
-  styleUrls: ['./invoice_details.component.scss']
+  templateUrl: './invoice-details.component.html',
+  styleUrls: ['./invoice-details.component.scss']
 })
-export class InvoiceDetailsComponent implements OnInit {
+export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   currentUser: User;
   @ViewChild('table') mdbTableEditor: MdbTableEditorDirective;
   headElements = [];
@@ -20,7 +21,7 @@ export class InvoiceDetailsComponent implements OnInit {
   searchText = '';
   highlightedRow: any = null;
   isMaster: boolean;
-  selectedInvoiceDetailDetail: InvoiceDetail;
+  selectedInvoiceDetail: InvoiceDetail;
   rolOptions = ['master', 'user'];
   selectedDate: string;
   message: string;
@@ -33,20 +34,38 @@ export class InvoiceDetailsComponent implements OnInit {
   isTableEditable = true;
   visibleEditIcons = false;
   isRowEditable = false;
+  private sub: any;
+
 
   constructor(
-    private http: HttpClient, private userService: UserService, private invoiceDetailService: InvoiceDetailService) {
+    private http: HttpClient,
+    private userService: UserService,
+    private invoiceDetailService: InvoiceDetailService,
+    private route: ActivatedRoute,
+    private router: Router) {
+
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.isMaster = this.currentUser.rol === 'master';
+    this.headElements = ['ID', 'Usuario', 'Fecha de creación',
+      'Método de envío', 'Método de pago', 'Fecha estimada de entrega', 'Editar'];
+  }
 
-    if (this.isMaster) {
-      this.headElements = ['ID', 'Usuario', 'Fecha de creación',
-        'Método de envío', 'Método de pago', 'Fecha estimada de entrega', 'Editar'];
-      this.invoiceDetailService.getAll().subscribe(data => {
-        console.log(data);
-        this.mdbTableEditor.dataArray = data;
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  ngOnInit() {
+    this.sub = this.route
+      .queryParams
+      .subscribe(params => {
+        // Defaults to 0 if no query param provided.
+        const id = +params['id'] || 0;
+        console.log(id);
       });
-    }
+
+    this.invoiceDetailService.getAllFromInvoiceID(1).subscribe(data => {
+      this.mdbTableEditor.dataArray = data;
+    });
   }
 
   showSuccessDeleteModal() {
@@ -82,8 +101,12 @@ export class InvoiceDetailsComponent implements OnInit {
     this.confirmDeleteModalIsVisible = true;
   }
 
+  back() {
+    this.router.navigate(['/invoices']);
+  }
+
   modalRemove() {
-    this.invoiceDetailService.deleteInvoiceDetail(this.selectedInvoiceDetailDetail.id).subscribe(data => {
+    this.invoiceDetailService.deleteInvoiceDetail(this.selectedInvoiceDetail.id).subscribe(data => {
       if (data.result === 'success') {
         const rowIndex = this.mdbTableEditor.dataArray.findIndex((el: any) => el === this.highlightedRow);
         this.mdbTableEditor.dataArray.splice(rowIndex, 1);
@@ -99,7 +122,7 @@ export class InvoiceDetailsComponent implements OnInit {
   }
 
   showEditIcons(index: number, invoiceDetail) {
-    this.selectedInvoiceDetailDetail = invoiceDetail;
+    this.selectedInvoiceDetail = invoiceDetail;
     this.rowIndex = index;
     this.visibleEditIcons = true;
     this.isRowEditable = true;
@@ -138,8 +161,8 @@ export class InvoiceDetailsComponent implements OnInit {
     console.log(values);
 
 
-    if (this.selectedInvoiceDetailDetail.id !== values.id
-      || this.selectedInvoiceDetailDetail.id !== values.id) {
+    if (this.selectedInvoiceDetail.id !== values.id
+      || this.selectedInvoiceDetail.id !== values.id) {
       this.invoiceDetailService.updateInvoiceDetail(values).subscribe(data => {
         console.log(data);
         if (data.result === 'success') {
@@ -154,7 +177,7 @@ export class InvoiceDetailsComponent implements OnInit {
     this.mdbTableEditor.iterableDataArray[userDataRowIndex] = values;
   }
 
-  insertInvoiceDetailDetail(form: any, modalInstance: any) {
+  insertInvoiceDetail(form: any, modalInstance: any) {
     const invoiceDetail: any = {
       id: this.mdbTableEditor.dataArray[this.mdbTableEditor.dataArray.length - 1].id + 1,
       name: form[0].value,
@@ -179,8 +202,5 @@ export class InvoiceDetailsComponent implements OnInit {
     form[1].value = '';
     form[2].value = '';
     form[3].value = '';
-  }
-
-  ngOnInit() {
   }
 }

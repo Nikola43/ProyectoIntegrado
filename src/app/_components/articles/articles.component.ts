@@ -151,7 +151,7 @@ export class ArticlesComponent implements OnInit {
     this.mdbTableEditor.iterableDataArray[userDataRowIndex] = values;
   }
 
-  insertarArticulo(form: any, modalInstance: any) {
+  insertArticle(form: any, modalInstance: any) {
     const article: any = {
       id: this.mdbTableEditor.dataArray[this.mdbTableEditor.dataArray.length - 1].id + 1,
       name: form[0].value,

@@ -4,6 +4,7 @@ import {LoginComponent} from './_components/login/login.component';
 import {ArticlesComponent} from './_components/articles/articles.component';
 import {AuthGuard} from './_guards/auth.guard';
 import {InvoicesComponent} from './_components/invoices/invoices.component';
+import {InvoiceDetailsComponent} from './_components/invoice-details/invoice-details.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'invoices',
     component: InvoicesComponent
+  },
+  {
+    path: 'invoice-details',
+    component: InvoiceDetailsComponent
   },
   {path: '**', redirectTo: ''}
 ];

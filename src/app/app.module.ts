@@ -14,9 +14,9 @@ import {UserComponent} from './_components/user/user.component';
 import {JwtInterceptor} from './_helpers/jwt.interceptor';
 import {ErrorInterceptor} from './_helpers/error.interceptor';
 import {InvoicesComponent} from './_components/invoices/invoices.component';
-import {InvoiceDetailsComponent} from './_components/invoice-detail/invoice-details.component';
 import {SuccessBottomModalComponent} from './_components/modals/success-bottom-modal/success-bottom-modal.component';
-import { ConfirmDeleteComponent } from './_components/modals/confirm-delete/confirm-delete.component';
+import {ConfirmDeleteComponent} from './_components/modals/confirm-delete/confirm-delete.component';
+import {InvoiceDetailsComponent} from './_components/invoice-details/invoice-details.component';
 
 @NgModule({
   declarations: [
