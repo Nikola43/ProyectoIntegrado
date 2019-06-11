@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceDetailService {
   private apiUrl = 'http://localhost:8080';
+
   // private apiUrl = 'http://51.77.223.220:8080';
 
   constructor(private http: HttpClient) {
@@ -14,6 +16,11 @@ export class InvoiceDetailService {
   getAll() {
     return this.http.get<any[]>(this.apiUrl + '/invoice_details');
   }
+
+  getAllFromInvoiceID(id) {
+    return this.http.get<any[]>(this.apiUrl + '/invoice_details/' + id);
+  }
+
 
   insertInvoiceDetails(invoinceDetail: any) {
     return this.http.post<any>(this.apiUrl + '/invoice_detail', JSON.stringify(invoinceDetail));
