@@ -89,8 +89,9 @@
 
           <span class="font-weight-bolder">Articulos</span>
         </div>
-        <div class="col-md-4 my-3 d-flex">
-          <a (click)="modalAdd.show()" mdbWavesEffect type="button" class="btn-floating success-green text-align-center"><i
+        <div *ngIf="isMaster" class="col-md-4 my-3 d-flex">
+          <a (click)="modalAdd.show()" mdbWavesEffect type="button"
+             class="btn-floating success-green text-align-center"><i
             class="fa fa-plus" aria-hidden="true"></i></a>
         </div>
 
@@ -151,7 +152,7 @@
           </td>
           <td *ngIf="isTableEditable">
             <div class="d-flex flex-column flex-center">
-              <a *ngIf="!isRowEditable" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
+              <a *ngIf="!isRowEditable && isMaster" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
                  class="btn-floating info-color"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
               <div *ngIf="visibleEditIcons && i == rowIndex" class="d-flex flex-center">
                 <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button" class="btn-floating success-green mr-2"><i

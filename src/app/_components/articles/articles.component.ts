@@ -39,11 +39,14 @@ export class ArticlesComponent implements OnInit {
 
     if (this.isMaster) {
       this.headElements = ['ID', 'Nombre', 'Categoría', 'Precio por unidad', 'Unidades en stock', 'Editar'];
-      this.articleService.getAll().subscribe(data => {
-        console.log(data);
-        this.mdbTableEditor.dataArray = data;
-      });
+    } else {
+      this.headElements = ['ID', 'Nombre', 'Categoría', 'Precio por unidad', 'Unidades en stock'];
     }
+
+    this.articleService.getAll().subscribe(data => {
+      console.log(data);
+      this.mdbTableEditor.dataArray = data;
+    });
   }
 
   showSuccessDeleteModal() {

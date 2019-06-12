@@ -38,6 +38,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   isRowEditable = false;
   private sub: any;
   private selectedArticle;
+  private invoice_id = 0;
 
 
   constructor(
@@ -49,7 +50,16 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
     private router: Router) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.isMaster = this.currentUser.rol === 'master';
-    this.headElements = ['ID', 'Artículo', 'Cantidad', 'Editar'];
+    if (this.isMaster) {
+      this.headElements = ['ID', 'Detalle', 'Cantidad', 'Editar'];
+    } else {
+      this.headElements = ['ID', 'Detalle', 'Cantidad'];
+    }
+  }
+
+  onChangeArticleSelect(event) {
+    event.preventDefault();
+    this.selectedArticle = event.target.value;
   }
 
   ngOnDestroy() {
@@ -57,15 +67,14 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    let id = 0;
     this.sub = this.route
       .queryParams
       .subscribe(params => {
         // Defaults to 0 if no query param provided.
-        id = +params['id'] || 0;
+        this.invoice_id = +params['id'] || 0;
       });
 
-    this.invoiceDetailService.getAllFromInvoiceID(id).subscribe(data => {
+    this.invoiceDetailService.getAllFromInvoiceID(this.invoice_id).subscribe(data => {
       this.mdbTableEditor.dataArray = data;
     });
 
@@ -119,7 +128,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
         this.mdbTableEditor.iterableDataArray.splice(rowIndex, 1);
         this.rowIndex = null;
         this.mdbTableEditor.updatePaginationInfo();
-        this.message = 'Artículo eliminado correctamente';
+        this.message = 'Detalle eliminado correctamente';
         this.showSuccessDeleteModal();
       } else {
       }
@@ -174,46 +183,37 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
           this.selectedInvoiceDetail.quantity = values.quantity;
           this.mdbTableEditor.dataArray[userDataRowIndex] = this.selectedInvoiceDetail;
           this.mdbTableEditor.iterableDataArray[userDataRowIndex] = this.selectedInvoiceDetail;
-          this.message = 'Artículo actualizado correctamente';
+          this.message = 'Detalle actualizado correctamente';
           this.showSuccessUpdateModal();
         } else {
 
         }
       });
     }
-
-
   }
 
-  onChangeRolSelect(event) {
-    event.preventDefault();
-    this.selectedArticle = event.target.value;
-  }
 
   insertInvoiceDetail(form: any, modalInstance: any) {
     const invoiceDetail: any = {
-      id: this.mdbTableEditor.dataArray[this.mdbTableEditor.dataArray.length - 1].id + 1,
-      name: form[0].value,
-      category: form[1].value,
-      unit_price: Number(form[2].value),
-      units_in_stock: Number(form[3].value)
+      invoice_id: Number(this.invoice_id),
+      article_id: Number(form[0].value),
+      quantity: Number(form[1].value),
     };
+
+    console.log(invoiceDetail);
 
     this.invoiceDetailService.insertInvoiceDetails(invoiceDetail).subscribe(data => {
       if (data.result === 'success') {
-        this.message = 'Artículo insertado correctamente';
+        this.mdbTableEditor.dataArray.push(invoiceDetail);
+        this.mdbTableEditor.updatePaginationInfo();
+        this.message = 'Detalle insertado correctamente';
         this.showSuccessInsertModal();
       }
     });
-
-    this.mdbTableEditor.dataArray.push(invoiceDetail);
-    this.mdbTableEditor.updatePaginationInfo();
     modalInstance.hide();
 
 
     form[0].value = '';
     form[1].value = '';
-    form[2].value = '';
-    form[3].value = '';
   }
 }

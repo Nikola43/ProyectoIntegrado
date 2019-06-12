@@ -14,23 +14,19 @@
           <div class="modal-body mx-3">
             <form #addForm>
               <div class="md-form mb-5">
-                <input type="text" id="name" class="form-control validate" mdbInput required="required">
-                <label data-error="wrong" data-success="right" for="name">User</label>
+                <select class="browser-default custom-select"
+                        (change)="onChangeArticleSelect($event)">
+                  <ng-container *ngFor="let article of articleList">
+                    <option *ngIf="selectedArticle === article" [value]="selectedArticle.id" selected
+                            disabled>{{article.name}}</option>
+                    <option *ngIf="selectedArticle !== article" [value]="article.id">{{article.name}}</option>
+                  </ng-container>
+                </select>
               </div>
 
               <div class="md-form mb-5">
-                <input type="text" id="category" class="form-control validate" mdbInput required="required">
-                <label data-error="wrong" data-success="right" for="category">Categoría</label>
-              </div>
-
-              <div class="md-form mb-5">
-                <input type="number" id="unit_price" class="form-control validate" mdbInput>
-                <label data-error="wrong" data-success="right" for="unit_price">Precio por unidad</label>
-              </div>
-
-              <div class="md-form mb-5">
-                <input type="text" id="inits_in_stock" class="form-control validate" mdbInput>
-                <label data-error="wrong" data-success="right" for="inits_in_stock">Unidades en stock</label>
+                <input type="number" id="category" class="form-control validate" mdbInput required="required">
+                <label data-error="wrong" data-success="right" for="category">Quantity</label>
               </div>
             </form>
           </div>
@@ -92,7 +88,7 @@
         <div class="col-md-4 my-3 d-flex">
           <a (click)="back()" mdbWavesEffect type="button" class="btn-floating info-color text-align-center"><i
             class="fa fa-arrow-left" aria-hidden="true"></i></a>
-          <a (click)="modalAdd.show()" mdbWavesEffect type="button"
+          <a *ngIf="isMaster" (click)="modalAdd.show()" mdbWavesEffect type="button"
              class="btn-floating success-green text-align-center"><i
             class="fa fa-plus" aria-hidden="true"></i></a>
         </div>
@@ -140,7 +136,7 @@
           </td>
           <td *ngIf="isTableEditable">
             <div class="d-flex flex-column flex-center">
-              <a *ngIf="!isRowEditable" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
+              <a *ngIf="!isRowEditable && isMaster" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
                  class="btn-floating info-color"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
               <div *ngIf="visibleEditIcons && i == rowIndex" class="d-flex flex-center">
                 <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button" class="btn-floating success-green mr-2"><i

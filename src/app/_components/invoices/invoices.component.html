@@ -6,7 +6,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header text-center">
-            <h4 class="modal-title w-100 font-weight-bold info-text ml-5">Añadir articulo</h4>
+            <h4 class="modal-title w-100 font-weight-bold info-text ml-5">Añadir factura</h4>
             <button type="button" class="close text-primary" (click)="modalAdd.hide()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -14,29 +14,42 @@
           <div class="modal-body mx-3">
             <form #addForm>
               <div class="md-form mb-5">
-                <input type="text" id="name" class="form-control validate" mdbInput required="required">
-                <label data-error="wrong" data-success="right" for="name">User</label>
+                <select class="browser-default custom-select"
+                        (change)="onChangeUserSelect($event)">
+                  <ng-container *ngFor="let user of userList">
+                    <option *ngIf="selectedUser === user" [value]="selectedUser.id" selected
+                            disabled>{{user.name}}</option>
+                    <option *ngIf="selectedUser !== user" [value]="user.id">{{user.name}}</option>
+                  </ng-container>
+                </select>
               </div>
 
               <div class="md-form mb-5">
-                <input type="text" id="category" class="form-control validate" mdbInput required="required">
-                <label data-error="wrong" data-success="right" for="category">Categoría</label>
+                <input type="date" id="creation_date" class="form-control validate" mdbInput required="required">
+                <label data-error="wrong" data-success="right" for="creation_date">Fecha de creación</label>
               </div>
 
               <div class="md-form mb-5">
-                <input type="number" id="unit_price" class="form-control validate" mdbInput>
-                <label data-error="wrong" data-success="right" for="unit_price">Precio por unidad</label>
+                <input type="text" id="shipping_method" class="form-control validate" mdbInput>
+                <label data-error="wrong" data-success="right" for="shipping_method">Método de envío</label>
               </div>
 
               <div class="md-form mb-5">
-                <input type="text" id="inits_in_stock" class="form-control validate" mdbInput>
-                <label data-error="wrong" data-success="right" for="inits_in_stock">Unidades en stock</label>
+                <input type="text" id="payment_method" class="form-control validate" mdbInput>
+                <label data-error="wrong" data-success="right" for="payment_method">Método de pago</label>
+              </div>
+
+              <div class="md-form mb-5">
+                <input type="date" id="estimated_delivery_date" class="form-control validate" mdbInput
+                       required="required">
+                <label data-error="wrong" data-success="right" for="estimated_delivery_date">Fecha estimada de
+                  entrega</label>
               </div>
             </form>
           </div>
           <div class="modal-footer d-flex justify-content-center buttonAddFormWrapper">
             <button class="btn btn-info btn-block buttonAdd" data-dismiss="modal"
-                    (click)="insertInvoice(addForm, modalAdd)">Insertar articulo
+                    (click)="insertInvoice(addForm, modalAdd)">Insertar factura
               <i class="fas fa-paper-plane-o ml-1"></i>
             </button>
           </div>
@@ -89,7 +102,7 @@
 
           <span class="font-weight-bolder">Articulos</span>
         </div>
-        <div class="col-md-4 my-3 d-flex">
+        <div *ngIf="isMaster" class="col-md-4 my-3 d-flex">
           <a (click)="modalAdd.show()" mdbWavesEffect type="button"
              class="btn-floating success-green  text-align-center"><i
             class="fa fa-plus" aria-hidden="true"></i></a>
@@ -120,10 +133,10 @@
           </td>
           <td>
             <ng-container *ngIf="i !== rowIndex">
-              {{item.user_id}}
+              {{item.user_name}}
             </ng-container>
             <ng-container *ngIf="i == rowIndex">
-              <input disabled [size]="1" type="number" class="form-control" [value]="item.user_id">
+              <input disabled [size]="1" type="number" class="form-control" [value]="item.user_name">
             </ng-container>
           </td>
           <td>
@@ -164,8 +177,11 @@
           </td>
           <td *ngIf="isTableEditable">
             <div class="d-flex flex-column flex-center">
-              <a *ngIf="!isRowEditable" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
+              <a *ngIf="!isRowEditable && isMaster" (click)="showEditIcons(i, item)" mdbWavesEffect type="button"
                  class="btn-floating info-color"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
+              <a *ngIf="!isMaster" (click)="showInvoiceDetails(item.id)" mdbWavesEffect type="button"
+                 class="btn-floating secondary-color  mr-2"><i
+                class="fa fa-list" aria-hidden="true"></i></a>
               <div *ngIf="visibleEditIcons && i == rowIndex" class="d-flex flex-center">
                 <a (click)="approveEdit(tableRow)" mdbWavesEffect type="button" class="btn-floating success-green mr-2"><i
                   class="fa fa-check" aria-hidden="true"></i></a>
@@ -185,7 +201,7 @@
           <td colspan="8">
             <div class="d-flex flex-center">
               <span>Mostrando desde {{table.paginationInfo.firstItem}} hasta {{table.paginationInfo.lastItem}}
-                de {{table.paginationInfo.allItems}} articulos</span>
+                de {{table.paginationInfo.allItems}} facturas</span>
               <div class="flex-1"></div>
               <mdb-icon fas icon="angle-left" size="lg" (click)="table.prevPage()" class="p-2"
                         [ngClass]="{'disabled text-muted': table.disablePrevious()}" mdbWavesEffect></mdb-icon>

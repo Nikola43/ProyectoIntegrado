@@ -28,11 +28,13 @@ export class InvoicesComponent implements OnInit {
   isSuccessDelete: boolean;
   isSuccessUpdate: boolean;
   isSuccessInsert: boolean;
+  selectedUser: User;
 
   rowIndex: any = null;
   isTableEditable = true;
   visibleEditIcons = false;
   isRowEditable = false;
+  userList: any;
 
   constructor(
     private http: HttpClient,
@@ -45,12 +47,25 @@ export class InvoicesComponent implements OnInit {
 
     if (this.isMaster) {
       this.headElements = ['ID', 'Usuario', 'Fecha de creación', 'Método de envío', 'Método de pago', 'Fecha estimada de entrega', 'Editar'];
-      this.invoiceService.getAll().subscribe(data => {
-        console.log(data);
-        this.mdbTableEditor.dataArray = data;
-      });
+    } else {
+      this.headElements = ['ID', 'Usuario', 'Fecha de creación', 'Método de envío', 'Método de pago', 'Fecha estimada de entrega', 'Detalles'];
     }
+    this.invoiceService.getAll().subscribe(data => {
+      console.log(data);
+      this.mdbTableEditor.dataArray = data;
+    });
+    this.userService.getAll().subscribe(data => {
+      console.log(data);
+      this.userList = data;
+    });
   }
+
+  onChangeUserSelect(event) {
+    event.preventDefault();
+    this.selectedUser = event.target.value;
+  }
+
+
 
   showSuccessDeleteModal() {
     this.isSuccessDelete = true;
@@ -93,7 +108,7 @@ export class InvoicesComponent implements OnInit {
         this.mdbTableEditor.iterableDataArray.splice(rowIndex, 1);
         this.rowIndex = null;
         this.mdbTableEditor.updatePaginationInfo();
-        this.message = 'Artículo eliminado correctamente';
+        this.message = 'Factura eliminado correctamente';
         this.showSuccessDeleteModal();
       } else {
       }
@@ -146,7 +161,7 @@ export class InvoicesComponent implements OnInit {
       this.invoiceService.updateInvoice(values).subscribe(data => {
         console.log(data);
         if (data.result === 'success') {
-          this.message = 'Artículo actualizado correctamente';
+          this.message = 'Factura actualizado correctamente';
           this.showSuccessUpdateModal();
         } else {
 
@@ -158,34 +173,32 @@ export class InvoicesComponent implements OnInit {
   }
 
   showInvoiceDetails(invoiceID) {
-    this.router.navigate(['invoice-details'], { queryParams: { id: invoiceID} });
+    this.router.navigate(['invoice-details'], {queryParams: {id: invoiceID}});
   }
 
   insertInvoice(form: any, modalInstance: any) {
     const invoice: any = {
       id: this.mdbTableEditor.dataArray[this.mdbTableEditor.dataArray.length - 1].id + 1,
-      name: form[0].value,
-      category: form[1].value,
-      unit_price: Number(form[2].value),
-      units_in_stock: Number(form[3].value)
+      user_id: Number(form[0].value),
+      creation_date: form[1].value,
+      shipping_method: form[2].value,
+      payment_method: form[3].value,
+      estimated_delivery_date: form[3].value
     };
 
     this.invoiceService.insertInvoice(invoice).subscribe(data => {
       if (data.result === 'success') {
-        this.message = 'Artículo insertado correctamente';
+        this.mdbTableEditor.dataArray.push(invoice);
+        this.mdbTableEditor.updatePaginationInfo();
+        this.message = 'Factura insertado correctamente';
         this.showSuccessInsertModal();
       }
     });
-
-    this.mdbTableEditor.dataArray.push(invoice);
-    this.mdbTableEditor.updatePaginationInfo();
-    modalInstance.hide();
-
-
     form[0].value = '';
     form[1].value = '';
     form[2].value = '';
     form[3].value = '';
+    modalInstance.hide();
   }
 
   ngOnInit() {
